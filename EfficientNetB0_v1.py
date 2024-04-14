@@ -106,7 +106,7 @@ targets_one_hot = to_categorical(targets, num_classes)
 
 # Save the model after training
 checkpoint = ModelCheckpoint(
-    "best_model_EfficientNetB0_v1_tangcuong.keras",
+    "best_model_EfficientNetB0_v1_tangcuong.weights.h5",
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
@@ -227,22 +227,12 @@ for fold_no, (train_indices, test_indices) in enumerate(
         callbacks=[checkpoint, metrics_logger],
         validation_data=(X_val, y_val),
     )
-    model.save(f"EfficientNetB0_v1_{fold_no}.h5")
+    
 
     # Đánh giá mô hình trên dữ liệu kiểm tra của fold hiện tại
     scores = model.evaluate(
         inputs[test_indices], targets_one_hot[test_indices], verbose=1
     )
-
-    # Check if the current model's accuracy is higher than the highest accuracy achieved so far
-    if scores[1] > highest_accuracy:
-        highest_accuracy = scores[1]
-        best_model = model
-
-    print(
-        f"Score for fold {fold_no}: {model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%"
-    )
-
     # Tính toán các metric
     y_pred = model.predict(inputs[test_indices])
     y_pred = np.argmax(y_pred, axis=1)
