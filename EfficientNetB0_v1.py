@@ -104,15 +104,17 @@ def build_model():
 # Chuyển đổi nhãn thành one-hot encoding
 targets_one_hot = to_categorical(targets, num_classes)
 
+# Save the model after training
 checkpoint = ModelCheckpoint(
-    "best_model_EfficientNetB0_v1_tangcuong.weights.h5",
+    "best_model_EfficientNetB0_v1_tangcuong",
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
+    save_weights_only=False,  # Lưu cả model (không chỉ weights)
     mode="max",
-    save_weights_only=True,
-
+    save_format='h5'  # Lưu định dạng h5
 )
+
 
 class MetricsLogger(Callback):
     def __init__(self, log_file, X_val, y_val, fold_no, log_file_prefix):
