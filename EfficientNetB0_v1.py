@@ -120,7 +120,6 @@ checkpoint = ModelCheckpoint(
 )
 
 
-
 class MetricsLogger(Callback):
     def __init__(self, log_file, X_val, y_val, fold_no, log_file_prefix):
         super().__init__()
