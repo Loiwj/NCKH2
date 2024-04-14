@@ -73,6 +73,7 @@ def build_model():
         [
             base_model,
             layers.GlobalAveragePooling2D(),
+            layers.Flatten(),
             layers.Dense(NUM_CLASSES, activation="softmax"),
         ]
     )
