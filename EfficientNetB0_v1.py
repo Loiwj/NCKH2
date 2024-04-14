@@ -227,7 +227,7 @@ for fold_no, (train_indices, test_indices) in enumerate(
         callbacks=[checkpoint, metrics_logger],
         validation_data=(X_val, y_val),
     )
-    model.save(f"EfficientNetB0_v1_tangcuong_fold_{fold_no}.h5")
+    model.save(f"EfficientNetB0_v1_{fold_no}.h5")
 
     # Đánh giá mô hình trên dữ liệu kiểm tra của fold hiện tại
     scores = model.evaluate(
