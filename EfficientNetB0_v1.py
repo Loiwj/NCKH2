@@ -242,7 +242,11 @@ for fold_no, (train_indices, test_indices) in enumerate(
         class_names,
         f"classification_report_EfficientNetB0_v1_tangcuong.txt",
     )
-    model.save(f"model_EfficientNetB0_v1_tangcuong_fold_{fold_no}.h5")
+    import datetime
+
+    current_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    model.save(f"model_EfficientNetB0_v1_tangcuong_fold_{fold_no}_{current_time}.h5")
+
     # Clear the session to free up memory after each fold
     tf.keras.backend.clear_session()
     
