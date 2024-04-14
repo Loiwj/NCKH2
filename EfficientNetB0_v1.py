@@ -110,7 +110,7 @@ checkpoint = ModelCheckpoint(
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
-    save_weights_only=False,  # Lưu cả model (không chỉ weights)
+    save_weights_only=True,  
     mode="max",
 )
 
