@@ -72,7 +72,8 @@ def build_model():
     model = models.Sequential(
         [
             base_model,
-            layers.Dense(NUM_CLASSES),
+            layers.GlobalAveragePooling2D(),
+            layers.Dense(NUM_CLASSES, activation="softmax"),
         ]
     )
 
