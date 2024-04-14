@@ -2,7 +2,6 @@ import os
 import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import EfficientNetB0
-
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras import layers, models
 from tensorflow.keras.optimizers import Adam
@@ -13,7 +12,6 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
 from PIL import Image
 import numpy as np
-
 from sklearn.metrics import (
     precision_score,
     recall_score,
@@ -24,17 +22,12 @@ from sklearn.metrics import (
     cohen_kappa_score,
 )
 
-
 def preprocess_image(image_path, target_size=(224, 224)):
     image = Image.open(image_path)
-
     image = image.resize(target_size)
-
     image_array = np.array(image)
-
     image_array = image_array.astype("float32") / 255.0
     return image_array
-
 
 # Thư mục chứa dữ liệu
 data_dir = "./Detect_chicken_sex_V3"
@@ -61,14 +54,12 @@ for class_index, class_name in enumerate(class_names):
 inputs = np.array(inputs)
 targets = np.array(targets)
 
-
 # Định nghĩa các tham số của K-fold Cross Validation
 num_folds = 5
 kfold = KFold(n_splits=num_folds, shuffle=True)
 fold_no = 1
 acc_per_fold = []
 loss_per_fold = []
-
 
 def build_model():
     base_model = EfficientNetB0(  # Sử dụng EfficientNetB0 thay vì MobileNetV2
@@ -110,7 +101,6 @@ def build_model():
 
     return model
 
-
 # Chuyển đổi nhãn thành one-hot encoding
 targets_one_hot = to_categorical(targets, num_classes)
 
@@ -121,8 +111,6 @@ checkpoint = ModelCheckpoint(
     save_best_only=True,
     mode="max",
 )
-
-
 
 class MetricsLogger(Callback):
     def __init__(self, log_file, X_val, y_val, fold_no, log_file_prefix):
@@ -155,13 +143,11 @@ class MetricsLogger(Callback):
     def on_train_end(self, logs=None):
         print(f"Confusion matrix for fold {self.fold_no} has been saved.")
 
-
 def save_confusion_matrix_append(y_true, y_pred, class_names, file_path):
     cm = confusion_matrix(y_true, y_pred)
     df_cm = pd.DataFrame(cm, index=class_names, columns=class_names)
     with open(file_path, "a") as f:
         df_cm.to_csv(f, sep="\t", mode="a")
-
 
 def save_classification_report(y_true, y_pred, class_names, file_path):
     report = classification_report(y_true, y_pred, target_names=class_names)
