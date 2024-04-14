@@ -115,7 +115,8 @@ checkpoint = ModelCheckpoint(
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
-    mode="max"
+    mode="max",
+    save_weights_only=False
 )
 
 
