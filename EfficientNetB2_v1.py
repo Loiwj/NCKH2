@@ -91,7 +91,6 @@ def build_model():
             layers.BatchNormalization(),
             layers.Dropout(0.3),
             layers.Dense(128, activation="relu"),
-            layers.Flatten(),
             layers.Dense(NUM_CLASSES, activation="softmax"),
         ]
     )
