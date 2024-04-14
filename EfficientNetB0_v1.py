@@ -160,11 +160,7 @@ for fold_no, (train_indices, test_indices) in enumerate(
     # Tính toán confusion matrix cho tập train trước khi tăng cường
     y_train_pred_before_augmentation = np.argmax(model.predict(X_train), axis=1)
     y_train_true = np.argmax(y_train, axis=1)
-    confusion_matrix_train_before_augmentation = confusion_matrix(
-        y_train_true, y_train_pred_before_augmentation
-    )
-    print("Confusion matrix for train data before augmentation:")
-    print(confusion_matrix_train_before_augmentation)
+    
     # Khởi tạo MetricsLogger mới cho mỗi fold
     metrics_logger = MetricsLogger(
         f"metrics_EfficientNetB0_v1_tangcuong_fold_{fold_no}.log",
@@ -186,27 +182,10 @@ for fold_no, (train_indices, test_indices) in enumerate(
     )
     # Tạo ra dữ liệu augmented từ dữ liệu train
     train_generator = train_datagen.flow(X_train, y_train, batch_size=BATCH_SIZE)
-    # Tính toán confusion matrix cho tập train sau khi tăng cường
-    y_train_pred_after_augmentation = np.argmax(model.predict(train_generator), axis=1)
-    confusion_matrix_train_after_augmentation = confusion_matrix(
-        y_train_true, y_train_pred_after_augmentation
-    )
-    print("Confusion matrix for train data after augmentation:")
-    print(confusion_matrix_train_after_augmentation)
+    
+    
 
-    # Lưu confusion matrix vào file
-    np.savetxt(
-        "confusion_matrix_train_before_augmentation.txt",
-        confusion_matrix_train_before_augmentation,
-        fmt="%d",
-        delimiter="\t",
-    )
-    np.savetxt(
-        "confusion_matrix_train_after_augmentation.txt",
-        confusion_matrix_train_after_augmentation,
-        fmt="%d",
-        delimiter="\t",
-    )
+    
     # Huấn luyện mô hình với dữ liệu tăng cường của fold hiện tại
     history = model.fit(
         train_generator,
