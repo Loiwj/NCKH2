@@ -72,17 +72,6 @@ def build_model():
     model = models.Sequential(
         [
             base_model,
-            layers.GlobalAveragePooling2D(),
-            layers.Dense(2048, activation="relu"),
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(1024, activation="relu"),
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(512, activation="relu"),
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(128, activation="relu"),
             layers.Dense(NUM_CLASSES),
         ]
     )
@@ -242,8 +231,7 @@ for fold_no, (train_indices, test_indices) in enumerate(
         class_names,
         f"classification_report_EfficientNetB0_v1_tangcuong.txt",
     )
-    model2 = model
-    model2.save(f"model_EfficientNetB0_v1_tangcuong_fold_{fold_no}.h5")
+
 
     # Clear the session to free up memory after each fold
     tf.keras.backend.clear_session()
