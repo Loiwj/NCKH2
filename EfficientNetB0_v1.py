@@ -106,6 +106,7 @@ def build_model():
 
     return model
 
+
 # Chuyển đổi nhãn thành one-hot encoding
 targets_one_hot = to_categorical(targets, num_classes)
 
@@ -114,8 +115,9 @@ checkpoint = ModelCheckpoint(
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
-    mode="max"
+    mode="max",
 )
+
 
 
 class MetricsLogger(Callback):
