@@ -43,7 +43,7 @@ targets = []
 IMG_SIZE = (224, 224)
 BATCH_SIZE = 16
 NUM_CLASSES = 2
-EPOCHS = 40
+EPOCHS = 2
 for class_index, class_name in enumerate(class_names):
     class_dir = os.path.join(data_dir, class_name)
     for image_name in os.listdir(class_dir):
@@ -55,7 +55,7 @@ inputs = np.array(inputs)
 targets = np.array(targets)
 
 # Định nghĩa các tham số của K-fold Cross Validation
-num_folds = 5
+num_folds = 2
 kfold = KFold(n_splits=num_folds, shuffle=True)
 fold_no = 1
 acc_per_fold = []
@@ -83,7 +83,7 @@ def build_model():
             layers.BatchNormalization(),
             layers.Dropout(0.3),
             layers.Dense(128, activation="relu"),
-            layers.Dense(NUM_CLASSES, activation="softmax"),
+            layers.Dense(NUM_CLASSES),
         ]
     )
 
