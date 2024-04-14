@@ -71,9 +71,6 @@ def build_model():
         weights="imagenet", include_top=False, input_shape=(*IMG_SIZE, 3)
     )
 
-    num_samples = inputs.shape[0]
-    num_features = base_model.output_shape[1]
-
     for layer in base_model.layers:
         layer.trainable = True
 
@@ -81,17 +78,6 @@ def build_model():
         [
             base_model,
             layers.GlobalAveragePooling2D(),
-            layers.Reshape((num_samples, -1)),
-            layers.Dense(num_features, activation="relu"), 
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(1024, activation="relu"),
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(512, activation="relu"),
-            layers.BatchNormalization(),
-            layers.Dropout(0.3),
-            layers.Dense(128, activation="relu"),
             layers.Dense(NUM_CLASSES, activation="softmax"),
         ]
     )
