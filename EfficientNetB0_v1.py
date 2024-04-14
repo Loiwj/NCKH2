@@ -12,6 +12,7 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
 from PIL import Image
 import numpy as np
+from tensorflow.keras.models import load_model
 from sklearn.metrics import (
     precision_score,
     recall_score,
@@ -106,13 +107,12 @@ targets_one_hot = to_categorical(targets, num_classes)
 
 # Save the model after training
 checkpoint = ModelCheckpoint(
-    "best_model_EfficientNetB0_v1_tangcuong",
+    "best_model_checkpoint.keras",
     monitor="val_accuracy",
     verbose=1,
     save_best_only=True,
     save_weights_only=False,  # Lưu cả model (không chỉ weights)
     mode="max",
-    save_format='h5'  # Lưu định dạng h5
 )
 
 
@@ -237,9 +237,12 @@ for fold_no, (train_indices, test_indices) in enumerate(
         f"Score for fold {fold_no}: {model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%"
     )
 
-    # Tính toán các metric
     y_pred = model.predict(inputs[test_indices])
     y_pred = np.argmax(y_pred, axis=1)
+
+    best_model = load_model("best_model_checkpoint.keras")
+    best_model.save("best_model_EfficientNetB0_v1_tangcuong.h5")
+    
 
     save_classification_report(
         targets[test_indices],
