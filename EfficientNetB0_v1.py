@@ -15,13 +15,9 @@ from PIL import Image
 import numpy as np
 
 from sklearn.metrics import (
-    precision_score,
-    recall_score,
     f1_score,
     confusion_matrix,
     classification_report,
-    matthews_corrcoef,
-    cohen_kappa_score,
 )
 
 
@@ -75,6 +71,9 @@ def build_model():
         weights="imagenet", include_top=False, input_shape=(*IMG_SIZE, 3)
     )
 
+    num_samples = inputs.shape[0]
+    num_features = base_model.output_shape[1]
+
     for layer in base_model.layers:
         layer.trainable = True
 
@@ -82,8 +81,8 @@ def build_model():
         [
             base_model,
             layers.GlobalAveragePooling2D(),
-            layers.Flatten(),
-            layers.Dense(2048, activation="relu"),
+            layers.Reshape((num_samples, -1)),
+            layers.Dense(num_features, activation="relu"), 
             layers.BatchNormalization(),
             layers.Dropout(0.3),
             layers.Dense(1024, activation="relu"),
@@ -110,7 +109,6 @@ def build_model():
     )
 
     return model
-
 
 # Chuyển đổi nhãn thành one-hot encoding
 targets_one_hot = to_categorical(targets, num_classes)
