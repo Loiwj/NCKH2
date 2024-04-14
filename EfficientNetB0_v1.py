@@ -12,7 +12,6 @@ from tensorflow.keras.utils import to_categorical
 from sklearn.model_selection import KFold
 from PIL import Image
 import numpy as np
-from tensorflow.keras.models import load_model
 from sklearn.metrics import (
     precision_score,
     recall_score,
@@ -105,9 +104,16 @@ def build_model():
 # Chuyển đổi nhãn thành one-hot encoding
 targets_one_hot = to_categorical(targets, num_classes)
 
-# Khởi tạo biến để lưu mô hình tốt nhất và chỉ số của nó
-best_val_accuracy = 0
-best_model_path = "best_model_EfficientNetB0_v1_tangcuong.h5"
+# Save the model after training
+checkpoint = ModelCheckpoint(
+    "best_model_EfficientNetB0_v1_tangcuong.keras",
+    monitor="val_accuracy",
+    verbose=1,
+    save_best_only=True,
+    save_weights_only=False,  # Lưu cả model (không chỉ weights)
+    mode="max",
+)
+
 
 class MetricsLogger(Callback):
     def __init__(self, log_file, X_val, y_val, fold_no, log_file_prefix):
@@ -213,39 +219,33 @@ for fold_no, (train_indices, test_indices) in enumerate(
         fmt="%d",
         delimiter="\t",
     )
-    # Sau khi huấn luyện
+    # Huấn luyện mô hình với dữ liệu tăng cường của fold hiện tại
     history = model.fit(
-        X_train,
-        y_train,
+        train_generator,
         epochs=EPOCHS,
-        batch_size=BATCH_SIZE,
         verbose=1,
-        callbacks=[metrics_logger],
+        callbacks=[checkpoint, metrics_logger],
         validation_data=(X_val, y_val),
     )
-    # Tính toán chỉ số đánh giá
-    val_accuracy = history.history["val_accuracy"][-1]
-
-    # Kiểm tra xem chỉ số đánh giá có cải thiện không
-    if val_accuracy > best_val_accuracy:
-        # Lưu mô hình mới tốt nhất
-        model.save(best_model_path)
-        best_val_accuracy = val_accuracy
-        print("Saved best model with validation accuracy:", best_val_accuracy)
+    model.save(f"EfficientNetB0_v1_tangcuong_fold_{fold_no}.h5")
 
     # Đánh giá mô hình trên dữ liệu kiểm tra của fold hiện tại
     scores = model.evaluate(
         inputs[test_indices], targets_one_hot[test_indices], verbose=1
     )
+
+    # Check if the current model's accuracy is higher than the highest accuracy achieved so far
+    if scores[1] > highest_accuracy:
+        highest_accuracy = scores[1]
+        best_model = model
+
     print(
         f"Score for fold {fold_no}: {model.metrics_names[0]} of {scores[0]}; {model.metrics_names[1]} of {scores[1]*100}%"
     )
 
+    # Tính toán các metric
     y_pred = model.predict(inputs[test_indices])
     y_pred = np.argmax(y_pred, axis=1)
-
-    
-    
 
     save_classification_report(
         targets[test_indices],
@@ -255,3 +255,4 @@ for fold_no, (train_indices, test_indices) in enumerate(
     )
     # Clear the session to free up memory after each fold
     tf.keras.backend.clear_session()
+    
