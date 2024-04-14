@@ -78,6 +78,17 @@ def build_model():
         [
             base_model,
             layers.GlobalAveragePooling2D(),
+            layers.Dense(2048, activation="relu"),
+            layers.BatchNormalization(),
+            layers.Dropout(0.3),
+            layers.Dense(1024, activation="relu"),
+            layers.BatchNormalization(),
+            layers.Dropout(0.3),
+            layers.Dense(512, activation="relu"),
+            layers.BatchNormalization(),
+            layers.Dropout(0.3),
+            layers.Dense(128, activation="relu"),
+            layers.Flatten(),
             layers.Dense(NUM_CLASSES, activation="softmax"),
         ]
     )
