@@ -15,9 +15,13 @@ from PIL import Image
 import numpy as np
 
 from sklearn.metrics import (
+    precision_score,
+    recall_score,
     f1_score,
     confusion_matrix,
     classification_report,
+    matthews_corrcoef,
+    cohen_kappa_score,
 )
 
 
