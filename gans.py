@@ -8,15 +8,17 @@ from tensorflow.keras.callbacks import ModelCheckpoint, CSVLogger
 from PIL import Image
 
 # Hàm tạo bộ sinh
-def build_generator(latent_dim):
+# Hàm tạo bộ sinh
+def build_generator(latent_dim, input_shape=(380, 380, 3)):
     base_model = EfficientNetB4(
         weights=None,
         include_top=False,
-        input_shape=(latent_dim,),
+        input_shape=input_shape,
         pooling='avg'
     )
     output = layers.Dense(380*380*3, activation='tanh')(base_model.output)
     return models.Model(inputs=base_model.input, outputs=output)
+
 
 # Hàm tạo bộ phân biệt
 def build_discriminator(input_shape):
