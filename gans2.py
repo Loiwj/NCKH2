@@ -9,15 +9,16 @@ from PIL import Image
 
 # Hàm tạo bộ sinh
 # Hàm tạo bộ sinh
-def build_generator(latent_dim, input_shape=(380, 380, 3)):
+def build_generator(latent_dim, input_shape=(100,)):
     base_model = EfficientNetB4(
         weights=None,
         include_top=False,
-        input_shape=input_shape,
+        input_shape=(380, 380, 3),
         pooling='avg'
     )
     output = layers.Dense(380*380*3, activation='tanh')(base_model.output)
     return models.Model(inputs=base_model.input, outputs=output)
+
 
 
 # Hàm tạo bộ phân biệt
