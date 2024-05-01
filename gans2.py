@@ -43,8 +43,8 @@ def build_gan(generator, discriminator):
 # Hàm huấn luyện GANs
 def train_gan(generator, discriminator, gan, latent_dim, X_train, num_epochs=100, batch_size=16):
     # Tạo callback để lưu lại các mô hình và các thông số log
-    checkpoint_generator = ModelCheckpoint("generator.keras", monitor='loss', verbose=1, save_best_only=True)
-    checkpoint_discriminator = ModelCheckpoint("discriminator.keras", monitor='loss', verbose=1, save_best_only=True)
+    checkpoint_generator = ModelCheckpoint("generator.h5", monitor='loss', verbose=1, save_best_only=True)
+    checkpoint_discriminator = ModelCheckpoint("discriminator.h5", monitor='loss', verbose=1, save_best_only=True)
     csv_logger_generator = CSVLogger("generator_log.csv", append=True)
     csv_logger_discriminator = CSVLogger("discriminator_log.csv", append=True)
     
@@ -75,8 +75,8 @@ def train_gan(generator, discriminator, gan, latent_dim, X_train, num_epochs=100
         print(f"Epoch: {epoch + 1}, Discriminator Loss: {d_loss}, Generator Loss: {g_loss}")
     
     # Lưu các mô hình sau khi huấn luyện
-    generator.save("generator_final.keras")
-    discriminator.save("discriminator_final.keras")
+    generator.save("generator_final.h5")
+    discriminator.save("discriminator_final.h5")
 
 # Thiết lập các tham số
 latent_dim = 100  # Kích thước của vector nhiễu đầu vào cho bộ sinh
